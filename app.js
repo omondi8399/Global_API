@@ -45,13 +45,18 @@ app.post("/api/v1/nfts", (req, res) => {
     // console.log(req)
     // console.log(req.body)
 
-    const newId = nfts[nfts.length -1] + 1
+    const newId = nfts[nfts.length -1].id + 1
     const newNFTs = Object.assign({ id: newId }, req.body)
 
     nfts.push(newNFTs)
 
-    fs.writeFile(`${__dirname}/nft-data/data/nft-simple.json`, JSON.stringify(nfts), error)
-    res.send("POST NFT")
+    fs.writeFile(`${__dirname}/nft-data/data/nft-simple.json`, JSON.stringify(nfts), err => {
+        res.status(201).json({
+            status: "success",
+            nft:newNFTs
+        })
+    })
+    // res.send("POST NFT")
 })
 
 
