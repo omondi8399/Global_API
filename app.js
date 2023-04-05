@@ -59,6 +59,15 @@ app.post("/api/v1/nfts", (req, res) => {
     // res.send("POST NFT")
 })
 
+//GET SINGLE NFT
+
+app.get("/api/v1/nfts/:id", (req, res) => {
+    console.log(req.params)
+    res.status(200).json({
+        status: "success",
+    })
+})
+
 
 
 const port = 3000
