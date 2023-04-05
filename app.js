@@ -62,9 +62,23 @@ app.post("/api/v1/nfts", (req, res) => {
 //GET SINGLE NFT
 
 app.get("/api/v1/nfts/:id", (req, res) => {
-    console.log(req.params)
+    // console.log(req.params)
+
+    const id = req.params.id * 1
+    const nft = nfts.find((el) => (el.id === id))
+
+    // if((id > nfts.length)) {
+        if (!nft) {
+        return res.status(404).json({
+            status: "Fail",
+            message: "Invalid ID"
+        })
+    }
     res.status(200).json({
         status: "success",
+        data: {
+            nft,
+        }
     })
 })
 
