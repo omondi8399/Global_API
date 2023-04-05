@@ -128,7 +128,7 @@ const nfts = JSON.parse(
     fs.readFileSync(`${__dirname}/nft-data/data/nft-simple.json`)
 ) 
 
-app.get('/api/v1/nfts', (req, res) => {
+const getAllNfts = (req, res) => {
     res.status(200).json({
         status: "success",
         results: nfts.length,
@@ -136,10 +136,9 @@ app.get('/api/v1/nfts', (req, res) => {
             nfts,
         }
     })
-})
-
+}
 //POST METHOD
-app.post("/api/v1/nfts", (req, res) => {
+const createNFT = (req, res) => {
   
 
     const newId = nfts[nfts.length -1].id + 1
@@ -154,12 +153,9 @@ app.post("/api/v1/nfts", (req, res) => {
         })
     })
     
-})
-
+} 
 //GET SINGLE NFT
-
-app.get("/api/v1/nfts/:id", (req, res) => {
-    // console.log(req.params)
+const getSingleNft = (req, res) => {
 
     const id = req.params.id * 1
     const nft = nfts.find((el) => (el.id === id))
@@ -177,10 +173,9 @@ app.get("/api/v1/nfts/:id", (req, res) => {
             nft,
         }
     })
-})
-
+} 
 //PATCH METHOD
-app.patch("/api/v1/nfts/:id", (req, res) => {
+const updateNFT = (req, res) => {
 
     if (req.params.id * 1 > nfts.length) {
         return res.status(404).json({
@@ -194,10 +189,9 @@ app.patch("/api/v1/nfts/:id", (req, res) => {
             nft: "updating nft"
         }
     })
-})
-
+}
 //DELETE METHOD
-app.delete("/api/v1/nfts/:id", (req, res) => {
+const deleteNFT = (req, res) => {
 
     if (req.params.id * 1 > nfts.length) {
         return res.status(404).json({
@@ -209,12 +203,16 @@ app.delete("/api/v1/nfts/:id", (req, res) => {
         status: "success",
         message: null
     })
-})
+}
+// app.get('/api/v1/nfts', getAllNfts )
+// app.post("/api/v1/nfts", createNFT )
+// app.get("/api/v1/nfts/:id", getSingleNft )
+// app.patch("/api/v1/nfts/:id", updateNFT )
+// app.delete("/api/v1/nfts/:id", deleteNFT )
 
+app.route("/api/v1/nfts").get(getAllNfts).post(createNFT)
 
-
-
-
+app.route("/api/v1/nfts/:id").get(getSingleNft).patch(updateNFT).delete(deleteNFT)
 
 const port = 3000
 app.listen(port, () => {
