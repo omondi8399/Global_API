@@ -82,6 +82,39 @@ app.get("/api/v1/nfts/:id", (req, res) => {
     })
 })
 
+//PATCH METHOD
+app.patch("/api/v1/nfts/:id", (req, res) => {
+
+    if (req.params.id * 1 > nfts.length) {
+        return res.status(404).json({
+            status: "Fail",
+            message: "Invalid ID"
+        })
+    }
+    res.status(200).json({
+        status: "success",
+        data: {
+            nft: "updating nft"
+        }
+    })
+})
+
+//DELETE METHOD
+app.delete("/api/v1/nfts/:id", (req, res) => {
+
+    if (req.params.id * 1 > nfts.length) {
+        return res.status(404).json({
+            status: "Fail",
+            message: "Invalid ID"
+        })
+    }
+    res.status(204).json({
+        status: "success",
+        message: null
+    })
+})
+
+
 
 
 const port = 3000
