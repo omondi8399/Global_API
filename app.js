@@ -415,7 +415,4 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", usersRouter)
 app.use("/api/v1/nfts", nftsRouter)
 
-const port = 3000
-app.listen(port, () => {
-    console.log(`App running on port ${port}.....`)
-})
+module.exports = app
