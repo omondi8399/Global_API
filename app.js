@@ -401,6 +401,9 @@ const app = express()
 app.use(express.json())
 app.use(morgan("dev"))
 
+//SERVING TEMPLATE DEMO
+app.use(express.static(`${__dirname}/nft-data/img`))
+
 //CUSTOM MIDDLE WARE
 app.use((req, res, next) => {
     console.log("Hey i am from middleware function")
