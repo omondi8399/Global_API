@@ -371,18 +371,23 @@ const deleteUser = (req, res) => {
     })
 }
 
-const nftsRouter = express
+const nftsRouter = express.Router()
+const usersRouter = express.Router()
 
 //ROUTER NFTs
 
-app.route("/api/v1/nfts").get(getAllNfts).post(createNFT)
+nftsRouter.route("/").get(getAllNfts).post(createNFT)
 
-app.route("/api/v1/nfts/:id").get(getSingleNft).patch(updateNFT).delete(deleteNFT)
+nftsRouter.route("/:id").get(getSingleNft).patch(updateNFT).delete(deleteNFT)
 
 //ROUTER USERS
-app.route("/api/v1/users").get(getAllUsers).post(createUser)
+usersRouter.route("/").get(getAllUsers).post(createUser)
 
-app.route("/api/v1/users/:id").get(getSingleUser).patch(updateUser).delete(deleteUser)
+usersRouter.route("/:id").get(getSingleUser).patch(updateUser).delete(deleteUser)
+
+app.use("/api/v1/users", usersRouter)
+app.use("/api/v1/nfts", nftsRouter)
+
 
 const port = 3000
 app.listen(port, () => {
