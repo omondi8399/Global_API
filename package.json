@@ -4,11 +4,13 @@
   "description": "this is a general api , that will be converted to nft marketplace api",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "prod": "NODE_ENV=production nodemon server.js"
   },
   "author": "Rodgers Omondi",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22"
