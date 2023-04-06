@@ -104,16 +104,25 @@
 
 const NFT = require("./../models/nftModels")
 
-exports.getAllNfts = (req, res) => {
-    console.log(req.requestTime)
-    res.status(200).json({
-        status: "success",
-        requestTime:req.requestTime,
-        // results: nfts.length,
-        // data: {
-        //     nfts,
-        // }
-    })
+exports.getAllNfts = async (req, res) => {
+    try {
+
+        const nfts = await NFT.find()
+        res.status(200).json({
+            status: "success",
+            results: nfts.length,
+            data: {
+                nfts,
+            }
+        })
+    } catch (error){
+       res.status(404).json({
+        status: "Fail",
+        message: "Server error"
+       })
+    }
+
+
 }
 //POST METHOD
 exports.createNFT = async (req, res) => {
@@ -135,52 +144,67 @@ res.status(201).json({
 } catch (error) {
     res.status(400).json({
         status: "fail",
-        message: error
+        message: "Invalid data sent from NFT"
     })
 }
 
     } 
 //GET SINGLE NFT
-exports.getSingleNft = (req, res) => {
+exports.getSingleNft = async (req, res) => {
+     try {
 
-    const id = req.params.id * 1
-    // const nft = nfts.find((el) => (el.id === id))
+        const nft = await NFT.findById(req.params.id)
 
- 
-    //     if (!nft) {
-    //     return res.status(404).json({
-    //         status: "Fail",
-    //         message: "Invalid ID"
-    //     })
-    // }
-    res.status(200).json({
-        status: "success",
-        // data: {
-        //     nft,
-        // }
-    })
+        res.status(200).json({
+            status: "success",
+            data: {
+                nft
+            }
+        })
+
+     } catch (error) {
+        res.status(404).json({
+            status: "Fail",
+            message: error
+         })
+     }
 } 
 //PATCH METHOD
-exports.updateNFT = (req, res) => {
+exports.updateNFT = async (req, res) => {
 
-    // if (req.params.id * 1 > nfts.length) {
-    //     return res.status(404).json({
-    //         status: "Fail",
-    //         message: "Invalid ID"
-    //     })
-    // }
-    res.status(200).json({
-        status: "success",
-        data: {
-            nft: "updating nft"
-        }
-    })
+    try {
+
+        const nft = await NFT.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                nft,
+            }
+        })
+    } catch (error) {
+        res.status(404).json({
+            status: "Fail",
+            message: error
+         })
+    }
 }
 //DELETE METHOD
-exports.deleteNFT = (req, res) => {
+exports.deleteNFT = async (req, res) => {
 
-    res.status(204).json({
-        status: "success",
-        message: null
-    })
+    try {
+
+        await NFT.findByIdAndDelete(req.params.id)
+        res.status(204).json({
+            status: "success",
+            message: null
+        })   
+    } catch (error) {
+
+    }
+
+   
 }
