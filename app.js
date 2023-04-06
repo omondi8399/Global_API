@@ -335,11 +335,54 @@ const deleteNFT = (req, res) => {
     })
 }
 
+//------USERS
+const getAllUsers = (req, res) => {
+    res.status(500).json({
+        status: "error",
+        message: "Internal server error"
+    })
+}
+
+const createUser = (req, res) => {
+    res.status(500).json({
+        status: "error",
+        message: "Internal server error"
+    })
+}
+
+const getSingleUser = (req, res) => {
+    res.status(500).json({
+        status: "error",
+        message: "Internal server error"
+    })
+}
+
+const updateUser = (req, res) => {
+    res.status(500).json({
+        status: "error",
+        message: "Internal server error"
+    })
+}
+
+const deleteUser = (req, res) => {
+    res.status(500).json({
+        status: "error",
+        message: "Internal server error"
+    })
+}
+
+const nftsRouter = express
+
 //ROUTER NFTs
 
 app.route("/api/v1/nfts").get(getAllNfts).post(createNFT)
 
 app.route("/api/v1/nfts/:id").get(getSingleNft).patch(updateNFT).delete(deleteNFT)
+
+//ROUTER USERS
+app.route("/api/v1/users").get(getAllUsers).post(createUser)
+
+app.route("/api/v1/users/:id").get(getSingleUser).patch(updateUser).delete(deleteUser)
 
 const port = 3000
 app.listen(port, () => {
