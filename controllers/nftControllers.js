@@ -106,8 +106,32 @@ const NFT = require("./../models/nftModels")
 
 exports.getAllNfts = async (req, res) => {
     try {
+    
+        // BUILD QUERY
+    
         console.log(req.query)
-        const nfts = await NFT.find()
+    
+        // const nfts = await NFT.find()
+        //     .where("duration")
+        //     .equals(5)
+        //     .where("difficulty")
+        //     .equals("easy")
+
+        const queryObj = { ...req.query }
+        const excludedFields = ["Page", "sort", "limit", "fields"]
+        excludedFields.forEach((el) => delete queryObj[el])
+
+        // console.log(req.query, queryObj)
+        // ADVANCED FILTERING QUERY 
+        const query =  NFT.find(req.query)
+        console.log(req.query)
+        // {difficulty: "easy", duration: {$gte: 5}}
+        //{ difficulty: 'easy', duration: { gte: '5' } }
+
+        const nfts = await query
+
+
+        //SEND QUERY
         res.status(200).json({
             status: "success",
             results: nfts.length,
