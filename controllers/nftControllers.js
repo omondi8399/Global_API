@@ -106,7 +106,7 @@ const NFT = require("./../models/nftModels")
 
 exports.getAllNfts = async (req, res) => {
     try {
-
+        console.log(req.query)
         const nfts = await NFT.find()
         res.status(200).json({
             status: "success",
