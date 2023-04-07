@@ -7,9 +7,10 @@ const nftSchema = new mongoose.Schema({
         type: String,
             required: [true, "A NFT must have a name"],
             unique: true,
+            trim: true
     },
 
-    durations: {
+    duration: {
         type: String,
         required: [true, "must provide duration"]
     },
@@ -26,14 +27,34 @@ const nftSchema = new mongoose.Schema({
         type: Number,
         default: 4.5
     },
-    ratingsAverage: {
+    ratingsQuantity: {
         type: Number,
         default: 0
     },
     price: {
         type: Number,
         required: [true, "A NFT must have a price"]
-    }
+    },
+    priceDiscount: Number,
+    summary: {
+        type: String,
+        trim: true,
+        required: [true, "must provide the summary"]
+    },
+    description: {
+        type: String,
+        trim: true
+    },
+    imageCover: {
+        type: String,
+        required: [true, "must provide the cover image"]
+    },
+    images: [String],
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    startDates: [Date]
 })
 
 const NFT = mongoose.model("NFT", nftSchema)
