@@ -120,13 +120,17 @@ exports.getAllNfts = async (req, res) => {
         const queryObj = { ...req.query }
         const excludedFields = ["Page", "sort", "limit", "fields"]
         excludedFields.forEach((el) => delete queryObj[el])
-
         // console.log(req.query, queryObj)
+
         // ADVANCED FILTERING QUERY 
-        const query =  NFT.find(req.query)
-        console.log(req.query)
+        let queryStr = JSON.stringify(queryObj)
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+        // console.log(JSON.parse(queryStr))
+
+        const query =  NFT.find(parse(queryStr))
         // {difficulty: "easy", duration: {$gte: 5}}
         //{ difficulty: 'easy', duration: { gte: '5' } }
+        //{ difficulty: 'easy', duration: { '$gte': '5' } }
 
         const nfts = await query
 
