@@ -124,7 +124,7 @@ exports.getAllNfts = async (req, res) => {
 
         // ADVANCED FILTERING QUERY 
         let queryStr = JSON.stringify(queryObj)
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
         // console.log(JSON.parse(queryStr))
 
         const query =  NFT.find(parse(queryStr))
@@ -140,8 +140,7 @@ exports.getAllNfts = async (req, res) => {
             status: "success",
             results: nfts.length,
             data: {
-                nfts,
-            }
+                nfts,            }
         })
     } catch (error){
        res.status(404).json({
