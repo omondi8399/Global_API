@@ -121,18 +121,18 @@ exports.getAllNfts = async (req, res) => {
         // console.log(JSON.parse(queryStr))
 
         let query =  NFT.find(JSON.parse(queryStr))
-        // // {difficulty: "easy", duration: {$gte: 5}}
-        // //{ difficulty: 'easy', duration: { gte: '5' } }
-        // //{ difficulty: 'easy', duration: { '$gte': '5' } }
+        // {difficulty: "easy", duration: {$gte: 5}}
+        //{ difficulty: 'easy', duration: { gte: '5' } }
+        //{ difficulty: 'easy', duration: { '$gte': '5' } }
 
-        // //SORTING METHOD
-        // if (req.query.sort){
-        //     const sortBy = req.query.sort.split(',').join(" ")
-        //     query = query.sort(sortBy)
-        //     console.log(sortBy)
-        // } else {
-        //     query = query.sort("-createdAt")
-        // }
+        //SORTING METHOD
+        if (req.query.sort){
+            const sortBy = req.query.sort.split(',').join(" ")
+            query = query.sort(sortBy)
+            console.log(sortBy)
+        } else {
+            query = query.sort("-createdAt")
+        }
 
         const nfts = await query
 
