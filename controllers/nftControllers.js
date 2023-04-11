@@ -622,16 +622,19 @@ exports.deleteNFT = async (req, res) => {
 
 //AGGREGATION PIPELINE
 
-exports.getNFTsStats = (req, res) => {
+exports.getNFTsStats = async (req, res) => {
     try {
 
-        const stats = NFT.aggregate([
+        const stats = await NFT.aggregate([
             {
                 $match: { ratingsAverage: { $gte: 4.5 }}
             },
             {
                 $group: {
-                    _id: null,
+                    // _id: "$ratingsAverage",
+                    _id: { $toUpper: "$difficulty" },
+                    numNFT: {$sum: 1},
+                    numRatings: {$sum: "$ratingsQuantity"},
                     avgRating: {$avg: "$ratingsAverage"},
                     avgPrice: {$avg: "$price"},
                     minPrice: {$min: "$price"},
