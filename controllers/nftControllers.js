@@ -100,7 +100,194 @@
 //     })
 // }
 
-///------------PART 2
+// ///------------PART 2
+
+// const NFT = require("./../models/nftModels")
+
+// exports.aliasTopNFTs = (req, res, next) => {
+//    req.query.limit = "5"
+//    req.query.sort = "-ratingsAverage,price"
+//    req.query.fields = "name,price,ratingsAverage,difficulty"
+//    next()
+// }
+
+// // class APIFeatures {
+// //     constructor(query, queryString) {
+// //        this.query = query
+// //        this.queryString = queryString
+// //     }
+
+// //     filter () {
+
+// //     }
+// // }
+
+// exports.getAllNfts = async (req, res) => {
+//     try {
+    
+//         // BUILD QUERY
+    
+//         const queryObj = {...req.query}
+//         const excludedFields = ["Page", "sort", "limit", "fields"]
+//         excludedFields.forEach((el) => delete queryObj[el])
+//         // console.log(req.query, queryObj)
+
+
+//         // ADVANCED FILTERING QUERY 
+//         let queryStr = JSON.stringify(queryObj)
+//         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
+//         // console.log(JSON.parse(queryStr))
+
+//         let query =  NFT.find(JSON.parse(queryStr))
+//         // {difficulty: "easy", duration: {$gte: 5}}
+//         //{ difficulty: 'easy', duration: { gte: '5' } }
+//         //{ difficulty: 'easy', duration: { '$gte': '5' } }
+
+//         //SORTING METHOD
+//         if (req.query.sort){
+//             const sortBy = req.query.sort.split(',').join(" ")
+//             query = query.sort(sortBy)
+//             console.log(sortBy)
+//         } else {
+//             query = query.sort("-createdAt")
+//         }
+
+//         //FIELDS LIMITING 
+//         if (req.query.fields) {
+//             const fields = req.query.fields.split(",").join(" ")
+//             query = query.select(fields)
+//         } else {
+//             query = query.select("-__v")
+//         }
+
+//         //PAGINATION FUNCTION
+//         const page = req.query.page * 1 || 1
+//         const limit = req.query.limit * 1 || 10
+//         const skip = (page - 1) * limit
+
+//         query = query.skip(skip).limit(limit)
+
+//         if (req.query.page) {
+//             const newNFTs = await NFT.countDocuments()
+//             if(skip >= newNFTs) throw new Error("This page doesn't exist")
+//         }
+
+//         // Page=2&limit=3, page = 1, 1-10, page 2, 11-20, page 3, 21
+
+//         const nfts = await query
+
+//          // console.log(req.query)
+
+//         // const nfts = await NFT.find()
+//         //     .where("duration")
+//         //     .equals(5)
+//         //     .where("difficulty")
+//         //     .equals("easy")
+
+//         //SEND QUERY
+//         res.status(200).json({
+//             status: "success",
+//             results: nfts.length,
+//             data: {
+//                 nfts ,
+//                }
+//         })
+//     } catch (error){
+//        res.status(404).json({
+//         status: "Fail",
+//         message: "Server error"
+//        })
+//     }
+
+
+// }
+// //POST METHOD
+// exports.createNFT = async (req, res) => {
+
+// // const newNFT = new NFT({
+// //     newNFT.save()
+// // )}
+
+// try {
+// const newNFT = await NFT.create(req.body)
+
+// res.status(201).json({
+//     status: "success",
+//     data: {
+//         nft: newNFT
+//     }
+// })
+    
+// } catch (error) {
+//     res.status(400).json({
+//         status: "fail",
+//         message: "Invalid data sent from NFT"
+//     })
+// }
+
+//     } 
+// //GET SINGLE NFT
+// exports.getSingleNft = async (req, res) => {
+//      try {
+
+//         const nft = await NFT.findById(req.params.id)
+
+//         res.status(200).json({
+//             status: "success",
+//             data: {
+//                 nft
+//             }
+//         })
+
+//      } catch (error) {
+//         res.status(404).json({
+//             status: "Fail",
+//             message: error
+//          })
+//      }
+// } 
+// //PATCH METHOD
+// exports.updateNFT = async (req, res) => {
+
+//     try {
+
+//         const nft = await NFT.findByIdAndUpdate(req.params.id, req.body, {
+//             new: true,
+//             runValidators: true
+//         })
+
+//         res.status(200).json({
+//             status: "success",
+//             data: {
+//                 nft,
+//             }
+//         })
+//     } catch (error) {
+//         res.status(404).json({
+//             status: "Fail",
+//             message: error
+//          })
+//     }
+// }
+// //DELETE METHOD
+// exports.deleteNFT = async (req, res) => {
+
+//     try {
+
+//         await NFT.findByIdAndDelete(req.params.id)
+//         res.status(204).json({
+//             status: "success",
+//             message: null
+//         })   
+//     } catch (error) {
+
+//     }
+
+   
+// } 
+
+
+///------------PART 3---------
 
 const NFT = require("./../models/nftModels")
 
@@ -111,35 +298,62 @@ exports.aliasTopNFTs = (req, res, next) => {
    next()
 }
 
-exports.getAllNfts = async (req, res) => {
-    try {
-    
-        // BUILD QUERY
-    
-        const queryObj = {...req.query}
+class APIFeatures {
+    constructor(query, queryString) {
+       this.query = query
+       this.queryString = queryString
+    }
+
+    filter () {
+ // BUILD QUERY
+        const queryObj = {...this.queryString}
         const excludedFields = ["Page", "sort", "limit", "fields"]
         excludedFields.forEach((el) => delete queryObj[el])
-        // console.log(req.query, queryObj)
-
 
         // ADVANCED FILTERING QUERY 
         let queryStr = JSON.stringify(queryObj)
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-        // console.log(JSON.parse(queryStr))
+        this.query.find(JSON.parse(queryStr))
 
-        let query =  NFT.find(JSON.parse(queryStr))
-        // {difficulty: "easy", duration: {$gte: 5}}
-        //{ difficulty: 'easy', duration: { gte: '5' } }
-        //{ difficulty: 'easy', duration: { '$gte': '5' } }
+        // this.query =  NFT.find(JSON.parse(queryStr))
+        return this
+    }
 
-        //SORTING METHOD
-        if (req.query.sort){
+    sort() {
+       
+        if (this.queryString.sort){
             const sortBy = req.query.sort.split(',').join(" ")
             query = query.sort(sortBy)
             console.log(sortBy)
+            this.query = this.query.sort(sortBy)
         } else {
-            query = query.sort("-createdAt")
+            this.query = this.query.sort("-createdAt")
         }
+        return this
+    }
+}
+
+exports.getAllNfts = async (req, res) => {
+    try {
+        // // BUILD QUERY
+        // const queryObj = {...req.query}
+        // const excludedFields = ["Page", "sort", "limit", "fields"]
+        // excludedFields.forEach((el) => delete queryObj[el])
+
+        // // ADVANCED FILTERING QUERY 
+        // let queryStr = JSON.stringify(queryObj)
+        // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
+
+        // let query =  NFT.find(JSON.parse(queryStr))
+       
+        // //SORTING METHOD
+        // if (req.query.sort){
+        //     const sortBy = req.query.sort.split(',').join(" ")
+        //     query = query.sort(sortBy)
+        //     console.log(sortBy)
+        // } else {
+        //     query = query.sort("-createdAt")
+        // }
 
         //FIELDS LIMITING 
         if (req.query.fields) {
@@ -160,18 +374,8 @@ exports.getAllNfts = async (req, res) => {
             const newNFTs = await NFT.countDocuments()
             if(skip >= newNFTs) throw new Error("This page doesn't exist")
         }
-
-        // Page=2&limit=3, page = 1, 1-10, page 2, 11-20, page 3, 21
-
-        const nfts = await query
-
-         // console.log(req.query)
-
-        // const nfts = await NFT.find()
-        //     .where("duration")
-        //     .equals(5)
-        //     .where("difficulty")
-        //     .equals("easy")
+        const  features = new APIFeatures(NFT.find(), req.query).filter()
+        const nfts = await features.query
 
         //SEND QUERY
         res.status(200).json({
@@ -192,11 +396,6 @@ exports.getAllNfts = async (req, res) => {
 }
 //POST METHOD
 exports.createNFT = async (req, res) => {
-
-// const newNFT = new NFT({
-//     newNFT.save()
-// )}
-
 try {
 const newNFT = await NFT.create(req.body)
 
@@ -273,4 +472,5 @@ exports.deleteNFT = async (req, res) => {
     }
 
    
-}
+} 
+
