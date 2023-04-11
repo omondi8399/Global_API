@@ -290,14 +290,6 @@
 ///------------PART 3---------
 
 const NFT = require("./../models/nftModels")
-
-exports.aliasTopNFTs = (req, res, next) => {
-   req.query.limit = "5"
-   req.query.sort = "-ratingsAverage,price"
-   req.query.fields = "name,price,ratingsAverage,difficulty"
-   next()
-}
-
 class APIFeatures {
     constructor(query, queryString) {
        this.query = query
@@ -313,7 +305,7 @@ class APIFeatures {
         // ADVANCED FILTERING QUERY 
         let queryStr = JSON.stringify(queryObj)
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-        this.query.find(JSON.parse(queryStr))
+        this.query = this.query.find(JSON.parse(queryStr))
 
         // this.query =  NFT.find(JSON.parse(queryStr))
         return this
@@ -322,7 +314,7 @@ class APIFeatures {
     sort() {
        
         if (this.queryString.sort){
-            const sortBy = req.query.sort.split(',').join(" ")
+            const sortBy = req.queryString.sort.split(',').join(" ")
             query = query.sort(sortBy)
             console.log(sortBy)
             this.query = this.query.sort(sortBy)
@@ -331,6 +323,38 @@ class APIFeatures {
         }
         return this
     }
+
+    limitFields() {
+          //FIELDS LIMITING 
+        if (this.query.fields) {
+            const fields = this.query.fields.split(",").join(" ")
+            this.query = this.query.select(fields)
+        } else {
+            this.query = this.query.select("-__v")
+        }
+        return this
+    }
+
+    pagination() {
+        const page = this.queryString.page * 1 || 1
+        const limit = this.queryString.limit * 1 || 10
+        const skip = (page - 1) * limit
+
+        this.query = this.query.skip(skip).limit(limit)
+
+        // if (this.queryString.page) {
+        //     const newNFTs = await NFT.countDocuments()
+        //     if(skip >= newNFTs) throw new Error("This page doesn't exist")
+        // }
+        return this
+    }
+}
+
+exports.aliasTopNFTs = (req, res, next) => {
+    req.query.limit = "5"
+    req.query.sort = "-ratingsAverage, price"
+    req.query.fields = "name, price, ratingsAverage,difficulty"
+    next()
 }
 
 exports.getAllNfts = async (req, res) => {
@@ -355,26 +379,30 @@ exports.getAllNfts = async (req, res) => {
         //     query = query.sort("-createdAt")
         // }
 
-        //FIELDS LIMITING 
-        if (req.query.fields) {
-            const fields = req.query.fields.split(",").join(" ")
-            query = query.select(fields)
-        } else {
-            query = query.select("-__v")
-        }
+        // //FIELDS LIMITING 
+        // if (req.query.fields) {
+        //     const fields = req.query.fields.split(",").join(" ")
+        //     query = query.select(fields)
+        // } else {
+        //     query = query.select("-__v")
+        // }
 
         //PAGINATION FUNCTION
-        const page = req.query.page * 1 || 1
-        const limit = req.query.limit * 1 || 10
-        const skip = (page - 1) * limit
+        // const page = req.query.page * 1 || 1
+        // const limit = req.query.limit * 1 || 10
+        // const skip = (page - 1) * limit
 
-        query = query.skip(skip).limit(limit)
+        // query = query.skip(skip).limit(limit)
 
-        if (req.query.page) {
-            const newNFTs = await NFT.countDocuments()
-            if(skip >= newNFTs) throw new Error("This page doesn't exist")
-        }
-        const  features = new APIFeatures(NFT.find(), req.query).filter()
+        // if (req.query.page) {
+        //     const newNFTs = await NFT.countDocuments()
+        //     if(skip >= newNFTs) throw new Error("This page doesn't exist")
+        // }
+        const  features = new APIFeatures(NFT.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .pagination()
         const nfts = await features.query
 
         //SEND QUERY
@@ -391,9 +419,8 @@ exports.getAllNfts = async (req, res) => {
         message: "Server error"
        })
     }
-
-
 }
+
 //POST METHOD
 exports.createNFT = async (req, res) => {
 try {
