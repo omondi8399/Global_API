@@ -17,7 +17,6 @@ class APIFeatures {
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
         this.query = this.query.find(JSON.parse(queryStr))
 
-        // this.query =  NFT.find(JSON.parse(queryStr))
         return this
     }
 
@@ -54,3 +53,4 @@ class APIFeatures {
         return this
     }
 }
+module.exports = APIFeatures
