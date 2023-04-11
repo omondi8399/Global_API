@@ -104,6 +104,13 @@
 
 const NFT = require("./../models/nftModels")
 
+exports.aliasTopNFTs = (req, res, next) => {
+   req.query.limit = "5"
+   req.query.sort = "-ratingsAverage,price"
+   req.query.fields = "name,price,ratingsAverage,difficulty"
+   next()
+}
+
 exports.getAllNfts = async (req, res) => {
     try {
     
@@ -171,7 +178,8 @@ exports.getAllNfts = async (req, res) => {
             status: "success",
             results: nfts.length,
             data: {
-                nfts,            }
+                nfts ,
+               }
         })
     } catch (error){
        res.status(404).json({
