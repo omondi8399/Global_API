@@ -142,6 +142,20 @@ exports.getAllNfts = async (req, res) => {
             query = query.select("-__v")
         }
 
+        //PAGINATION FUNCTION
+        const page = req.query.page * 1 || 1
+        const limit = req.query.limit * 1 || 10
+        const skip = (page - 1) * limit
+
+        query = query.skip(skip).limit(limit)
+
+        if (req.query.page) {
+            const newNFTs = await NFT.countDocuments()
+            if(skip >= newNFTs) throw new Error("This page doesn't exist")
+        }
+
+        // Page=2&limit=3, page = 1, 1-10, page 2, 11-20, page 3, 21
+
         const nfts = await query
 
          // console.log(req.query)
