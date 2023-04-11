@@ -107,57 +107,58 @@ const NFT = require("./../models/nftModels")
 exports.getAllNfts = async (req, res) => {
     try {
     
-    //     // BUILD QUERY
+        // BUILD QUERY
     
-    //     console.log(req.query)
-    
-    //     // const nfts = await NFT.find()
-    //     //     .where("duration")
-    //     //     .equals(5)
-    //     //     .where("difficulty")
-    //     //     .equals("easy")
+        const queryObj = {...req.query}
+        const excludedFields = ["Page", "sort", "limit", "fields"]
+        excludedFields.forEach((el) => delete queryObj[el])
+        // console.log(req.query, queryObj)
 
-    //     const queryObj = { ...req.query }
-    //     const excludedFields = ["Page", "sort", "limit", "fields"]
-    //     excludedFields.forEach((el) => delete queryObj[el])
-    //     // console.log(req.query, queryObj)
+        const query = NFT.find(queryObj)
+        console.log(req.query)
 
-    //     // ADVANCED FILTERING QUERY 
-    //     let queryStr = JSON.stringify(queryObj)
-    //     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-    //     // console.log(JSON.parse(queryStr))
+        // // ADVANCED FILTERING QUERY 
+        // let queryStr = JSON.stringify(queryObj)
+        // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
+        // // console.log(JSON.parse(queryStr))
 
-    //     let query =  NFT.find(parse(queryStr))
-    //     // {difficulty: "easy", duration: {$gte: 5}}
-    //     //{ difficulty: 'easy', duration: { gte: '5' } }
-    //     //{ difficulty: 'easy', duration: { '$gte': '5' } }
+        // let query =  NFT.find(parse(queryStr))
+        // // {difficulty: "easy", duration: {$gte: 5}}
+        // //{ difficulty: 'easy', duration: { gte: '5' } }
+        // //{ difficulty: 'easy', duration: { '$gte': '5' } }
 
-    //     //SORTING METHOD
-    //     if (req.query.sort){
-    //         const sortBy = req.query.sort.split(',').join(" ")
-    //         query = query.sort(sortBy)
-    //         console.log(sortBy)
-    //     } else {
-    //         query = query.sort("-createdAt")
-    //     }
+        // //SORTING METHOD
+        // if (req.query.sort){
+        //     const sortBy = req.query.sort.split(',').join(" ")
+        //     query = query.sort(sortBy)
+        //     console.log(sortBy)
+        // } else {
+        //     query = query.sort("-createdAt")
+        // }
 
+        const nfts = await query
 
-    //     const nfts = await query
+         // console.log(req.query)
 
+        // const nfts = await NFT.find()
+        //     .where("duration")
+        //     .equals(5)
+        //     .where("difficulty")
+        //     .equals("easy")
 
-    //     //SEND QUERY
-    //     res.status(200).json({
-    //         status: "success",
-    //         results: nfts.length,
-    //         data: {
-    //             nfts,            }
-    //     })
-    // } catch (error){
-    //    res.status(404).json({
-    //     status: "Fail",
-    //     message: "Server error"
-    //    })
-    // }
+        //SEND QUERY
+        res.status(200).json({
+            status: "success",
+            results: nfts.length,
+            data: {
+                nfts,            }
+        })
+    } catch (error){
+       res.status(404).json({
+        status: "Fail",
+        message: "Server error"
+       })
+    }
 
 
 }
