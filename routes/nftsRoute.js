@@ -14,6 +14,9 @@ const router = express.Router()
 // TOP 5 NFTs BY PRICE
 router.route('/top-5-nfts').get(nftControllers.aliasTopNFTs, nftControllers.getAllNfts)
 
+// STATS ROUTE
+router.route("/nfts-stats").get(nftControllers.getNFTsStats)
+
 //ROUTER NFTs
 // router.route("/").get(nftControllers.getAllNfts).post( nftControllers.checkBody, nftControllers.createNFT)
 

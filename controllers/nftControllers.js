@@ -611,11 +611,45 @@ exports.deleteNFT = async (req, res) => {
             message: null
         })
     } catch (error) {
-
+      res.status(404).json({
+        status: "fail",
+        message: error
+      })
     }
 
    
 } 
 
+//AGGREGATION PIPELINE
 
+exports.getNFTsStats = (req, res) => {
+    try {
+
+        const stats = NFT.aggregate([
+            {
+                $match: { ratingsAverage: { $gte: 4.5 }}
+            },
+            {
+                $group: {
+                    _id: null,
+                    avgRating: {$avg: "$ratingsAverage"},
+                    avgPrice: {$avg: "$price"},
+                    minPrice: {$min: "$price"},
+                    maxPrice: {$max: "$price"}
+                }
+            }
+        ])
+        res.status(200).json({
+            status: "success",
+            data: {
+                stats
+            }
+        })
+    } catch (error) {
+        res.status(404).json({
+            status: "fail",
+            message: error
+        })
+    }
+}
 
