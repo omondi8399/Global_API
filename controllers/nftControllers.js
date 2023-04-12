@@ -55,7 +55,8 @@
 //     // })
     
 // } 
-// //GET SINGLE NFT
+// //GET SINGLE 
+NFT
 // exports.getSingleNft = (req, res) => {
 
 //     const id = req.params.id * 1
@@ -537,9 +538,15 @@ exports.getAllNfts = async (req, res) => {
     }
 }
 
+const catchAsync = myFn => {
+    return (req, res, next) => {
+        // myFn(req, res, next).catch((err) => next(err))
+        myFn(req, res, next).catch(next)
+    }
+}
+
 //POST METHOD
-exports.createNFT = async (req, res) => {
-try {
+exports.createNFT = catchAsync(async (req, res) => {
 const newNFT = await NFT.create(req.body)
 
 res.status(201).json({
@@ -548,15 +555,24 @@ res.status(201).json({
         nft: newNFT
     }
 })
-    
-} catch (error) {
-    res.status(400).json({
-        status: "fail",
-        message: "Invalid data sent from NFT"
-    })
-}
+// try {
+// const newNFT = await NFT.create(req.body)
 
-    } 
+// res.status(201).json({
+//     status: "success",
+//     data: {
+//         nft: newNFT
+//     }
+// })
+    
+// } catch (error) {
+//     res.status(400).json({
+//         status: "fail",
+//         message: "Invalid data sent from NFT"
+//     })
+// }
+
+    })
 //GET SINGLE NFT
 exports.getSingleNft = async (req, res) => {
      try {
