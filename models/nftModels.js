@@ -56,6 +56,14 @@ const nftSchema = new mongoose.Schema({
         select: false
     },
     startDates: [Date]
+},
+{
+    toJSON: { virtuals: true},
+    toObject: { virtuals: true}
+})
+
+nftSchema.virtual("durationWeeks").get(function(){
+    return this.duration / 7
 })
 
 const NFT = mongoose.model("NFT", nftSchema)
