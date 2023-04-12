@@ -9,7 +9,7 @@ const nftSchema = new mongoose.Schema({
             unique: true,
             trim: true,
             maxlength: [40, "nft must have 40 characters"],
-            minlength: [10, "nft must have 10 characters"],
+            minlength: [10, "nft must have 10 characters"]
             // validate: [validator.isAlpha, "NFT name must only contain characters"]
     },
     slug: String,
