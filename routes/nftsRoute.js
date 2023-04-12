@@ -17,6 +17,9 @@ router.route('/top-5-nfts').get(nftControllers.aliasTopNFTs, nftControllers.getA
 // STATS ROUTE
 router.route("/nfts-stats").get(nftControllers.getNFTsStats)
 
+//GET MONTHLY PLAN 
+router.route("/monthly-plan/:year").get(nftControllers.getMonthlyPlan)
+
 //ROUTER NFTs
 // router.route("/").get(nftControllers.getAllNfts).post( nftControllers.checkBody, nftControllers.createNFT)
 
