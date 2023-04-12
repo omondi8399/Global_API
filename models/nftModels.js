@@ -106,7 +106,7 @@ nftSchema.pre(/^find/, function(next){
 //---------Post
 nftSchema.post(/^find/, function(doc, next) {
     console.log(`Query took time: ${Date.now() - this.start} times`)
-    console.log(doc)
+    // console.log(doc)
     next()
 })
 
