@@ -454,4 +454,15 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", usersRouter)
 app.use("/api/v1/nfts", nftsRouter)
 
+//ERROR SECTION
+
+app.all("*", (req,res) => {
+    res.status(404).json({
+        status: "fail",
+        message: `can't find ${req.originalUrl} on this server`
+    })
+})
+
+//GLOBAL ERROR HANDLING
+
 module.exports = app
