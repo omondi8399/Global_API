@@ -72,7 +72,7 @@ exports.protect = catchAsync(async(req, res, next) => {
     console.log(decoded)
     // 3 user exist
 
-    const freshUser = await User.findOne(decoded.id)
+    const freshUser = await User.findById(decoded.id)
 
     if (!freshUser) {
         return next(
@@ -81,5 +81,7 @@ exports.protect = catchAsync(async(req, res, next) => {
     }
 
     // 4 change password
+    freshUser.changedPasswordAfter(decoded.iat)
+
     next()
 })
