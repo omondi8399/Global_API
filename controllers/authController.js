@@ -91,3 +91,12 @@ exports.protect = catchAsync(async(req, res, next) => {
     req.user = currentUser
     next()
 })
+
+exports.restrictTo = (...roles) => {
+    return(req, res, next) => {
+        if (!roles.includes(req.user.role)){
+            new AppError("You have no access to delete NFT", 403)
+        }
+        next()
+    }
+}

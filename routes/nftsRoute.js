@@ -26,6 +26,14 @@ router.route("/monthly-plan/:year").get(nftControllers.getMonthlyPlan)
 
 router.route("/").get(authController.protect, nftControllers.getAllNfts).post( nftControllers.createNFT)
 
-router.route("/:id").get(nftControllers.getSingleNft).patch(nftControllers.updateNFT).delete(nftControllers.deleteNFT)
+router
+.route("/:id")
+.get(nftControllers.getSingleNft)
+.patch(nftControllers.updateNFT)
+.delete(
+    authController.protect,
+    authController.restrictTo("admin", "guide"),
+    nftControllers.deleteNFT
+    )
 
 module.exports = router
