@@ -3,7 +3,7 @@ const validator = require("validator")
 
 //name, email, photo, password, passwordConfirmed
 
-const userSchema = new mongoose({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "please tell us your name"]
@@ -27,6 +27,13 @@ const userSchema = new mongoose({
      passwordConfirm: {
         type: String,
         required: [true, "please confirm your password"],
+        validate: {
+            //THIS will only work on save or create 
+            validator: function(el){
+                return el == this.password  //abc === abc true, abc == acb false
+            },
+            message: "Password is not the same"
+        }
      }
     
 })
