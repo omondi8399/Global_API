@@ -781,7 +781,7 @@ res.status(201).json({
         nft: newNFT
     }
 })
-    })
+})
 //GET SINGLE NFT
 exports.getSingleNft = catchAsync(async (req, res, next) => {
         const nft = await NFT.findById(req.params.id)

@@ -13,6 +13,7 @@ mongoose.connect(DB, {
     // console.log(con.connection)
     console.log("DB Connected Successfully")
 })
+// console.log(process.env.NODE_ENV)
 // console.log(app.get("env"))
 // console.log(process.env)
 
