@@ -22,6 +22,7 @@
 // }
 
 //PART 2-------------
+
 const AppError = require("../Utils/appError");
 
 const handleCastErrorDB = (err) => {
@@ -37,6 +38,8 @@ const handleDuplicateFieldsBD = (err) => {
   const message = `Duplicate field values ${value} H. Please use another value`;
   return new AppError(message, 400);
 };
+
+const handleJWTError = (err) => new AppError("Invalid token, Please log in again", 401)
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
@@ -80,7 +83,7 @@ module.exports = (err, req, res, next) => {
     if (error.name === "CastError") error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsBD(error);
     if (error.name === "ValidationError") error = handleValidationError(error);
-
+    if (error.name === "JsonWebTokenError") error = handleJWTError(error)
     sendErrorProd(error, res);
   }
   next();

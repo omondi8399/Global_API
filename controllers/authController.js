@@ -1,3 +1,4 @@
+const {promisify} = require("util")
 const jwt = require("jsonwebtoken")
 const User = require("./../models/userModel")
 const catchAsync = require("../Utils/catchAsync")
@@ -66,6 +67,9 @@ exports.protect = catchAsync(async(req, res, next) => {
         return next(new AppError("You are not logged in to get access ", 401))
     }
     // 2 Validate token
+
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+    console.log(decoded)
     // 3 user exist
     // 4 change password
     next()
