@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
         validate: {
             //THIS will only work on save or create 
             validator: function(el){
-                return el == this.password  //abc === abc true, abc == acb false
+                return el === this.password  //abc === abc true, abc == acb false
             },
             message: "Password is not the same"
         }
@@ -60,9 +60,14 @@ userSchema.methods.correctPassword = async function (
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
    if (this.passwordChangedAt) {
+    const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10 )
+    
+    return JWTTimestamp < changedTimeStamp  //300 < 200
+
     console.log(this.passwordChangedAt, JWTTimestamp)
    }
-   
+
+   //WE WANT TO RETURN FALSE BY DEFAULT
    return false
 }
 
