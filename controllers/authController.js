@@ -53,3 +53,20 @@ exports.login = catchAsync(async(req, res, next) => {
     })
 })
 
+//PROTECTING DATA
+exports.protect = catchAsync(async(req, res, next) => {
+    // 1 Check token
+    let token
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+        token = req.headers.authorization.split(" ")[1]
+        // consol.log(token)
+    }
+
+    if(!token){
+        return next(new AppError("You are not logged in to get access ", 401))
+    }
+    // 2 Validate token
+    // 3 user exist
+    // 4 change password
+    next()
+})
