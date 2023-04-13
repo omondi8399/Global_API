@@ -72,22 +72,22 @@ exports.protect = catchAsync(async(req, res, next) => {
     console.log(decoded)
     // 3 user exist
 
-    const freshUser = await User.findById(decoded.id)
+    const currentUser = await User.findById(decoded.id)
 
-    if (!freshUser) {
+    if (!currentUser) {
         return next(
             new AppError("The user belonging to this token no longer exist", 401)
         )
     }
 
     // 4 change password
-    if(freshUser.changedPasswordAfter(decoded.iat)){
+    if(currentUser.changedPasswordAfter(decoded.iat)){
         return next(
             new AppError("User recently changed the password", 401)
         )
     }
 
     //USER WILL HAVE ACCESS TO THE PROTECTED DATA
-    req.user = freshUser
+    req.user = currentUser
     next()
 })
