@@ -12,6 +12,8 @@ router.patch("/resetPassword/:token", authController.resetPassword)
 
 router.patch("/updateMyPassword", authController.protect, authController.updatePassword)
 
+router.patch("/updateMe", authController.protect, authController.updateMe)
+
 //ROUTER USERS
 router.route("/").get(userControllers.getAllUsers).post(userControllers.createUser)
 
