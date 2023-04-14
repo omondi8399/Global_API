@@ -428,6 +428,8 @@ const express = require("express")
 const morgan = require("morgan")
 const rateLimit = require("express-rate-limit")
 const helmet = require("helmet")
+const mongoSanitize = require("express-mongo-sanitize")
+const xss = require("xss-clean")
 
 const AppError = require("./Utils/appError")
 const globalErrorHandler = require("./controllers/errorController")
@@ -436,6 +438,12 @@ const usersRouter = require("./routes/usersRoute")
 
 const app = express()
 app.use(express.json({limit: "10kb"}))
+
+// DATA SANITIZATION AGAINST NoSQL QUERY INJECTION
+app.use(mongoSanitize())
+
+// DATA SANITIZATION against site script XSS
+app.use(xss())
 
 //SECURE HEADER HTTP
 app.use(helmet())
