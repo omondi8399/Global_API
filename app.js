@@ -427,6 +427,7 @@
 const express = require("express")
 const morgan = require("morgan")
 const rateLimit = require("express-rate-limit")
+const helmet = require("helmet")
 
 const AppError = require("./Utils/appError")
 const globalErrorHandler = require("./controllers/errorController")
@@ -434,7 +435,10 @@ const nftsRouter = require("./routes/nftsRoute")
 const usersRouter = require("./routes/usersRoute")
 
 const app = express()
-app.use(express.json())
+app.use(express.json({limit: "10kb"}))
+
+//SECURE HEADER HTTP
+app.use(helmet())
 
 //GLOBAL MIDDLEWARE
 
@@ -442,6 +446,7 @@ app.use(express.json())
 //     app.use(morgan("dev"))
 // }
 
+//RATE LIMIT
 const limiter = rateLimit({
     max: 100,
     windowsMs: 60 * 60 * 1000,
