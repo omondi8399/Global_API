@@ -63,6 +63,12 @@ userSchema.pre("save", function (next) {
     next()
 })
 
+userSchema.pre(/^find/, function (next) {
+    this.find({ active: { $ne: false } })
+
+    next()
+})
+
 userSchema.pre("save", async function (next) {
     //PASSWORD MODIFIED
     if(!this.isModified("password")) return next()
