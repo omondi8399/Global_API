@@ -3,8 +3,16 @@ const User = require("./../models/userModels")
 const catchAsync = require("../Utils/catchAsync")
 const AppError = require("../utils/appError")
 
+const filterObj = (obj, ...allowedFields) => {
+    const newObj = {}
+    Object.keys(obj).forEach((el) => {
+        if (allowedFields.includes(el)) newObj[el] = obj[el]
+    })
 
-exports.updateMe = (req, res, next) => {
+    return newObj
+}
+
+exports.updateMe = catchAsync(async(req, res, next) => {
     // 1 CREATE ERROR IF USER UPDATING PASSWORD
     if (req.body.password || req.body.passwordConfirm) {
         return next (
@@ -12,11 +20,19 @@ exports.updateMe = (req, res, next) => {
         )
     }
     // 2 UPDATE USER DATE
-    res.status(200).json({
-        status: "success"
-    })
+const filteredBody = filterObj(req.body, "name", "email")
+const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true
+})
 
-}
+    res.status(200).json({
+        status: "success",
+        data: {
+            user: updateUser
+        }
+    })
+})
 
 exports.getAllUsers = catchAsync(async(req, res) => {
     const users = await User.find()
