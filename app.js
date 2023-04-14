@@ -430,6 +430,7 @@ const rateLimit = require("express-rate-limit")
 const helmet = require("helmet")
 const mongoSanitize = require("express-mongo-sanitize")
 const xss = require("xss-clean")
+const hpp = require("hpp")
 
 const AppError = require("./Utils/appError")
 const globalErrorHandler = require("./controllers/errorController")
@@ -445,8 +446,20 @@ app.use(mongoSanitize())
 // DATA SANITIZATION against site script XSS
 app.use(xss())
 
+// PREVENT PARAMETER POLLUTION
+app.use(hpp())
+
 //SECURE HEADER HTTP
-app.use(helmet())
+app.use(helmet({
+    whitelist: [
+        "duration", 
+        "difficulty", 
+        "maxGroupSize", 
+        "price", 
+        "ratingsAverage",
+        "ratingsQuantity"
+    ]
+}))
 
 //GLOBAL MIDDLEWARE
 
