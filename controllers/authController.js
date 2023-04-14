@@ -13,6 +13,20 @@ const signToken = (id) => {
         expiresIn: process.env.JWT_EXPIRES_IN
     })
 }
+
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id)
+
+
+    res.status(statusCode).json({
+        status: "success",
+        token,
+        data: {
+            user
+        }
+    })
+}
+
 //SIGNUP
 exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create(req.body)
@@ -22,17 +36,18 @@ exports.signup = catchAsync(async (req, res, next) => {
     //     password: req.body.password,
     //     passwordConfirm: req.body.passwordConfirm
     // })
+    createSendToken(newUser, 201, res)
 
-    const token = signToken(newUser._id)
+    // const token = signToken(newUser._id)
 
 
-    res.status(201).json({
-        status: "success",
-        token,
-        data: {
-            user: newUser
-        }
-    })
+    // res.status(201).json({
+    //     status: "success",
+    //     token,
+    //     data: {
+    //         user: newUser
+    //     }
+    // })
 })
 
 
@@ -49,12 +64,12 @@ exports.login = catchAsync(async(req, res, next) => {
     if (!user || !(await user.correctPassword(password, user.password))){
         return next(new AppError("Incorrect email and password", 401))
     }
-
-    const token = signToken(user.id)
-    res.status(200).json({
-        status: "success",
-        token
-    })
+    createSendToken(user, 200, res)
+    // const token = signToken(user.id)
+    // res.status(200).json({
+    //     status: "success",
+    //     token
+    // })
 })
 
 //PROTECTING DATA
@@ -171,13 +186,31 @@ await user.save()
 
 
     // 4 Log the user in , send JWT
+    createSendToken(user, 200, res)
 
-    const token = signToken(user.id)
-    res.status(200).json({
-        status: "success",
-        token
-    })
+    // const token = signToken(user.id)
+    // res.status(200).json({
+    //     status: "success",
+    //     token
+    // })
 
 }
 
 //UPDATING PASSWORD
+exports.updatePassword = catchAsync(async(req, res, next) => {
+    // 1 GET USER FROM COLLECTION OF DATA
+    const user = await User.findByID(req.user.id).select("+password")
+
+    // 2 CHECK IF THE POSTED CURRENT PASSWORD IS CORRECT
+    if (!(await correctPassword(req.body.passwordConfirm, user.password))) {
+        return next(new AppError("Your current password is wrong", 401))
+    }
+
+    // 3 IF SO<  UPDATE THE PASSWORD
+    user.password = req.body.password
+    user.passwordConfirm = req.body.passwordConfirm
+    await user.save()
+
+    // 4 LOG USER AFTER PASSWORD CHANGE
+    createSendToken(user, 200, res)
+})
