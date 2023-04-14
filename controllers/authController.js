@@ -179,3 +179,5 @@ await user.save()
     })
 
 }
+
+//UPDATING PASSWORD
