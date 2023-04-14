@@ -34,6 +34,15 @@ const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     })
 })
 
+exports.deleteMe = catchAsync(async (req, res, next) => {
+    await User.findByIdAndUpdate(req.body.id, { active: false })
+
+    res.status(204).json({
+        status: "success",
+        data: null
+    })
+})
+
 exports.getAllUsers = catchAsync(async(req, res) => {
     const users = await User.find()
 
