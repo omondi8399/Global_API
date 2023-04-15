@@ -1,7 +1,7 @@
 //------USERS
-const User = require("./../models/userModels")
+const User = require("./../models/userModel")
 const catchAsync = require("../Utils/catchAsync")
-const AppError = require("../utils/appError")
+const AppError = require("../Utils/appError")
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {}

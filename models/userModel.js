@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
         validate: {
             //THIS will only work on save or create 
             validator: function(el){
-                return el === this.password  //abc === abc true, abc == acb false
+                return el == this.password  //abc === abc true, abc == acb false
             },
             message: "Password is not the same"
         }
