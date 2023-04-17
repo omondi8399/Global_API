@@ -38,7 +38,6 @@ const createSendToken = (user, statusCode, res) => {
         }
     })
 }
-
 //SIGNUP
 exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create(req.body)
@@ -66,16 +65,17 @@ exports.signup = catchAsync(async (req, res, next) => {
 //LOGIN USER
 exports.login = catchAsync(async(req, res, next) => {
     const {email, password} = req.body
-
+//   console.log(req.body)
     if (!email || !password) {
        return next(new AppError("Please provide your email & password"))
     }
-    const user = await user.findOne({ email }).select("+password")
-    // console.log(user)
-
+    const user = await User.findOne({ email }).select('+password')
+    // console.log(ser)
     if (!user || !(await user.correctPassword(password, user.password))){
+       
         return next(new AppError("Incorrect email and password", 401))
     }
+    console.log("we are here")
     createSendToken(user, 200, res)
     // const token = signToken(user.id)
     // res.status(200).json({
