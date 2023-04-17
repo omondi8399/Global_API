@@ -24,7 +24,8 @@ router.route("/monthly-plan/:year").get(nftControllers.getMonthlyPlan)
 //ROUTER NFTs
 // router.route("/").get(nftControllers.getAllNfts).post( nftControllers.checkBody, nftControllers.createNFT)
 
-router.route("/").get(authController.protect, nftControllers.getAllNfts).post( nftControllers.createNFT)
+router.route("/").get(authController.protect, nftControllers.getAllNfts)
+router.route("/createNFT").post( nftControllers.createNFT)
 
 router
 .route("/:id")
